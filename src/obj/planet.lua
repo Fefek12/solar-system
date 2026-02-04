@@ -1,3 +1,14 @@
+local function debug(Planets)
+    local planets = {}
+
+    for _, planet in pairs(Planets) do
+        print("Planet", planet.pos, ":", planet.r)
+        table.insert(planets, planet)
+    end
+
+    if #planets > 0 then return true end
+end
+
 function DrawPlanet(Star, planet)
     love.graphics.setColor(love.math.colorFromBytes(35, 35, 35))
     love.graphics.circle("line", Star.x, Star.y, Star.r * planet.pos)
@@ -12,7 +23,7 @@ function UpdatePlanet(Star, planet, dt)
     planet.y = Star.y + math.sin(math.rad(planet.a)) * distance
 end
 
-function CreatePlanet(Star, Planets)
+function CreatePlanet(Star, Planets, pos)
     local planet = { -- planet object
         pos = 0,     -- star is the first element of solar system
         c = {},
@@ -26,9 +37,14 @@ function CreatePlanet(Star, Planets)
         moons = {}
     }
 
-    local position = 2
-    for i in pairs(Planets) do
-        position = position + 2
+    local position
+    if not pos then
+        position = 2
+        for i in pairs(Planets) do
+            position = position + 2
+        end
+    else
+        position = pos
     end
 
     planet.pos = position
@@ -37,4 +53,11 @@ function CreatePlanet(Star, Planets)
     planet.c = { math.random(255), math.random(255), math.random(255) }
 
     return planet
+end
+
+function PlanetsChanged(Planets, Star)
+    for i in pairs(Planets) do
+        table.remove(Planets, i)
+    end
+    if debug(Planets) then PlanetsChanged(Planets, Star) end
 end

@@ -7,16 +7,14 @@
         graphics = fire
 ]]
 
-require("solar-system/planet")
-require("solar-system/moon")
+require("src/obj/planet")
+require("src/obj/moon")
+require("src/obj/star")
 
 function love.load()
-    Star = {
-        x = love.graphics.getWidth() / 2,
-        y = love.graphics.getHeight() / 2,
-        r = 100,
-    }
+    Star = {}
     Planets = {}
+    LastTemp = nil
 end
 
 function love.update(dt)
@@ -31,8 +29,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.setColor(1, 1, 0)
-    love.graphics.circle("fill", Star.x, Star.y, Star.r)
+    if Star and Star.x and Star.y and Star.r then DrawStar(Star) end
 
     for _, planet in pairs(Planets) do
         DrawPlanet(Star, planet)
@@ -45,7 +42,7 @@ function love.draw()
 end
 
 function love.keypressed(key)
-    if key == "f1" then
+    if key == "f1" or key == "f11" then
         if love.window.getFullscreen() then
             love.window.setFullscreen(false)
         else
@@ -54,10 +51,20 @@ function love.keypressed(key)
         Star.x = love.graphics.getWidth() / 2
         Star.y = love.graphics.getHeight() / 2
     elseif key == "1" then
-        local planet = CreatePlanet(Star, Planets)
+        Star = CreateStar()
+        if not LastTemp then
+            LastTemp = Star.temp
+        else
+            if LastTemp ~= Star.temp then
+                PlanetsChanged(Planets, Star)
+                LastTemp = Star.temp
+            end
+        end
+    elseif key == "2" then
+        local planet = CreatePlanet(Star, Planets, nil)
 
         table.insert(Planets, planet)
-    elseif key == "2" then
+    elseif key == "3" then
         if not Planets or #Planets <= 0 then return end
 
         local planet = Planets[math.random(1, #Planets)]
