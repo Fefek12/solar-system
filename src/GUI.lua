@@ -12,7 +12,7 @@ function HoverUi(star, planets)
         AddElements("text", "temperature: " .. star.temp .. "K")
         AddElements("text", "size: " .. star.r)
         AddElements("text", "type: " .. star.type)
-        DrawUi(mx, my, { 0.5, 0.5, 0.5, 0.5 }, { 1, 1, 1, 1 })
+        DrawUi(mx, my, { 0.2, 0.2, 0.2, 0.7 }, { 1, 1, 1, 1 })
         ResetUi()
         return
     end
@@ -26,7 +26,7 @@ function HoverUi(star, planets)
                 AddElements("text", "size: " .. planet.r)
                 AddElements("text", "speed: " .. planet.s)
                 AddElements("text", "moons: " .. #planet.moons)
-                DrawUi(mx, my, { 0.5, 0.5, 0.5, 0.5 }, { 1, 1, 1, 1 })
+                DrawUi(mx, my, { 0.2, 0.2, 0.2, 0.7 }, { 1, 1, 1, 1 })
                 ResetUi()
                 break
             end

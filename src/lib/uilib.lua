@@ -11,9 +11,24 @@ local ui = {
 local function execute()
     local executed = {}
     for i in pairs(ui.e) do
-        table.insert(executed, ui.i)
+        table.insert(executed, ui.e[i])
     end
     if #executed > 0 then return true end
+end
+
+local function calculateDimensions()
+    local w = 0
+    local h = 0
+
+    for _, e in pairs(ui.e) do
+        local ew = e:getWidth()
+        if ew > w then w = ew end
+
+        local eh = e:getHeight()
+        h = h + eh
+    end
+
+    return w, h
 end
 
 function ResetUi()
@@ -32,17 +47,15 @@ function AddElements(type, content)
         local text = love.graphics.newText(font)
         text:set(content)
 
-        local w = text:getWidth()
-        local h = text:getHeight()
-
-        if ui.w < w then ui.w = w + PADDING end
-        ui.h = ui.h + h
-
         table.insert(ui.e, text)
     end
 end
 
 function DrawUi(x, y, bg_rgba, c_rgba)
+    local w, h = calculateDimensions()
+    ui.w = w
+    ui.h = h
+
     local x = x + CURSOR_MARGIN
     local y = y + CURSOR_MARGIN
 

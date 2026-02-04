@@ -53,6 +53,9 @@ function love.keypressed(key)
         else
             love.window.setFullscreen(true)
         end
+
+        if not star or not star.x or not star.y then return end
+
         star.x = love.graphics.getWidth() / 2
         star.y = love.graphics.getHeight() / 2
     elseif key == "1" then
@@ -66,6 +69,8 @@ function love.keypressed(key)
             end
         end
     elseif key == "2" then
+        if not star or not star.x or not star.y then return end
+
         local planet = CreatePlanet(star, planets, nil)
 
         table.insert(planets, planet)
