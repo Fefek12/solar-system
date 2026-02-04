@@ -1,12 +1,12 @@
-local function debug(Planets)
-    local planets = {}
+local function execute(planets)
+    local executed = {}
 
-    for _, planet in pairs(Planets) do
+    for _, planet in pairs(planets) do
         print("Planet", planet.pos, ":", planet.r)
-        table.insert(planets, planet)
+        table.insert(executed, planet)
     end
 
-    if #planets > 0 then return true end
+    if #executed > 0 then return true end
 end
 
 function DrawPlanet(Star, planet)
@@ -16,14 +16,14 @@ function DrawPlanet(Star, planet)
     love.graphics.circle("fill", planet.x, planet.y, planet.r)
 end
 
-function UpdatePlanet(Star, planet, dt)
+function UpdatePlanet(star, planet, dt)
     planet.a = planet.a + (planet.s * dt)
-    local distance = Star.r * planet.pos
-    planet.x = Star.x + math.cos(math.rad(planet.a)) * distance
-    planet.y = Star.y + math.sin(math.rad(planet.a)) * distance
+    local distance = star.r * planet.pos
+    planet.x = star.x + math.cos(math.rad(planet.a)) * distance
+    planet.y = star.y + math.sin(math.rad(planet.a)) * distance
 end
 
-function CreatePlanet(Star, Planets, pos)
+function CreatePlanet(star, planets, pos)
     local planet = { -- planet object
         pos = 0,     -- star is the first element of solar system
         c = {},
@@ -40,7 +40,7 @@ function CreatePlanet(Star, Planets, pos)
     local position
     if not pos then
         position = 2
-        for i in pairs(Planets) do
+        for i in pairs(planets) do
             position = position + 2
         end
     else
@@ -48,16 +48,16 @@ function CreatePlanet(Star, Planets, pos)
     end
 
     planet.pos = position
-    planet.r = math.random(Star.r / 10, Star.r / 4)
+    planet.r = math.random(star.r / 10, star.r / 4)
     planet.s = math.random(20, 100)
     planet.c = { math.random(255), math.random(255), math.random(255) }
 
     return planet
 end
 
-function PlanetsChanged(Planets, Star)
-    for i in pairs(Planets) do
-        table.remove(Planets, i)
+function PlanetsChanged(planets, star)
+    for i in pairs(planets) do
+        table.remove(planets, i)
     end
-    if debug(Planets) then PlanetsChanged(Planets, Star) end
+    if execute(planets) then PlanetsChanged(planets, star) end
 end

@@ -10,16 +10,17 @@
 require("src/obj/planet")
 require("src/obj/moon")
 require("src/obj/star")
+require("src/GUI")
 
-function love.load()
-    Star = {}
-    Planets = {}
-    LastTemp = nil
-end
+local star = {}
+local planets = {}
+local lastTemp = nil
+
+function love.load() end
 
 function love.update(dt)
-    for _, planet in pairs(Planets) do
-        UpdatePlanet(Star, planet, dt)
+    for _, planet in pairs(planets) do
+        UpdatePlanet(star, planet, dt)
         if #planet.moons > 0 then
             for _, moon in pairs(planet.moons) do
                 UpdateMoon(planet, moon, dt)
@@ -29,17 +30,21 @@ function love.update(dt)
 end
 
 function love.draw()
-    if Star and Star.x and Star.y and Star.r then DrawStar(Star) end
+    if star and star.x and star.y and star.r then DrawStar(star) end
 
-    for _, planet in pairs(Planets) do
-        DrawPlanet(Star, planet)
+    for _, planet in pairs(planets) do
+        DrawPlanet(star, planet)
         if #planet.moons > 0 then
             for _, moon in pairs(planet.moons) do
                 DrawMoon(planet, moon)
             end
         end
     end
+
+    HoverUi(star, planets)
 end
+
+-- INPUT HANDLING --
 
 function love.keypressed(key)
     if key == "f1" or key == "f11" then
@@ -48,26 +53,26 @@ function love.keypressed(key)
         else
             love.window.setFullscreen(true)
         end
-        Star.x = love.graphics.getWidth() / 2
-        Star.y = love.graphics.getHeight() / 2
+        star.x = love.graphics.getWidth() / 2
+        star.y = love.graphics.getHeight() / 2
     elseif key == "1" then
-        Star = CreateStar()
-        if not LastTemp then
-            LastTemp = Star.temp
+        star = CreateStar()
+        if not lastTemp then
+            lastTemp = star.temp
         else
-            if LastTemp ~= Star.temp then
-                PlanetsChanged(Planets, Star)
-                LastTemp = Star.temp
+            if lastTemp ~= star.temp then
+                PlanetsChanged(planets, star)
+                lastTemp = star.temp
             end
         end
     elseif key == "2" then
-        local planet = CreatePlanet(Star, Planets, nil)
+        local planet = CreatePlanet(star, planets, nil)
 
-        table.insert(Planets, planet)
+        table.insert(planets, planet)
     elseif key == "3" then
-        if not Planets or #Planets <= 0 then return end
+        if not planets or #planets <= 0 then return end
 
-        local planet = Planets[math.random(1, #Planets)]
+        local planet = planets[math.random(1, #planets)]
         local moon = CreateMoon(planet)
 
         table.insert(planet.moons, moon)
