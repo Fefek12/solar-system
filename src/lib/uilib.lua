@@ -1,5 +1,6 @@
-local PADDING = 0
-local CURSOR_MARGIN = 15
+local PADDING = 0        -- space between the elements of ui and the background or the frame !! CAN BE SAFELY EDITED !!
+local CURSOR_MARGIN = 15 -- space between the cursor and ui !! CAN BE SAFELY EDITED !!
+
 local ui = {
     e = {},
 
@@ -25,8 +26,8 @@ function ResetUi()
     if execute() then ResetUi() end
 end
 
-function AddElements(e, content)
-    if e == "text" then
+function AddElements(type, content)
+    if type == "text" then
         local font = love.graphics.getFont()
         local text = love.graphics.newText(font)
         text:set(content)
